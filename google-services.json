@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "635802649222",
+    "project_id": "mooneazy-dc07b",
+    "storage_bucket": "mooneazy-dc07b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635802649222:android:e4f3934f17aa0ce5cc8707",
+        "android_client_info": {
+          "package_name": "com.scihub.mooneazy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQIJvIIw4nmNdsn9AwImFbsn5IRMn2tAc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
