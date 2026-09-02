@@ -8,10 +8,29 @@
     "scheme": "mooneazy",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.scihub.mooneazy",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "plugins": [
-      "expo-notifications"
+        "expo-router",
+        [
+            "expo-splash-screen",
+            {
+                "backgroundColor": "#208AEF",
+                "image": "./assets/images/splash-icon.png",
+                "imageWidth": 76
+            }
+        ],
+        "expo-image",
+        [
+            "expo-notifications",
+            {
+            "sounds": ["./assets/sounds/buzzer.wav"]
+            }
+        ]
     ],
     "android": {
       "adaptiveIcon": {
@@ -28,17 +47,6 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
-        }
-      ]
-    ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
