@@ -62,22 +62,38 @@ async function checkFirstLaunch(){
         if (hasLaunched === null) {
             return false;
         }
-        return true;
+        return hasLaunched.toLowerCase() == true;
     } catch (error) {
         console.error('Storage Error:', error);
+        return false
     }
 }
 
-async function setFirstLaunch(){
+
+async function setFirstLaunch(value){
     if (Platform.OS === 'web') return;
-    await AsyncStorage.setItem('HAS_LAUNCHED_KEY', 'true');
+    await AsyncStorage.setItem('HAS_LAUNCHED_KEY', value);
+}
+
+async function isActive(){
+    if (Platform.OS === 'web') return true
+    const status = await AsyncStorage.getItem('IS_ACTIVE');
+    return status.toLowerCase() === 'true'
+}
+
+
+async function setActive(value){
+    if (Platform.OS === 'web') return;
+    await AsyncStorage.setItem('IS_ACTIVE', value);
+
 }
 
 
 async function setupNotifications() {
     try {
         const hasLaunched = await checkFirstLaunch();
-        if (hasLaunched == true) return;
+        const isActive = await isActive()
+        if (hasLaunched == true && isActive == false) return;
 
         // A. Request system permissions
         const { status } = await Notifications.requestPermissionsAsync();
@@ -99,13 +115,14 @@ async function setupNotifications() {
 
         // D. Register Device Target via Anonymous Session
         await registerDeviceToAppwrite(deviceToken);
-        await setFirstLaunch();
+        await setFirstLaunch('true');
+        await setActive('true')
     } catch (error) {
         console.error('Notification Setup Error:', error);
     }
 }
 
 
-export { registerDeviceToAppwrite, setupNotifications };
+export { registerDeviceToAppwrite, setupNotifications, isActive, setFirstLaunch };
 
 
