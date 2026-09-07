@@ -20,6 +20,7 @@ const SAMPLE_SIGNALS = [
     }
 ]
 
+
 function getTable(){
     const client = getClient()
     const tablesDB = new TablesDB(client);
@@ -35,8 +36,34 @@ function getFlatRows(rows){
 }
 
 
-export async function getLatestSignals(limit=10, test_signals=SAMPLE_SIGNALS){
+function timestampToLocal24Hour(binanceTimestamp){
+    const date = new Date(binanceTimestamp);
 
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+ 
+    };
+
+    // Intl.DateTimeFormat with 'en-CA' outputs: YYYY-MM-DD, HH:MM:SS
+    const formatted = new Intl.DateTimeFormat('en-CA', options).format(date);
+    return formatted.replace(', ', ' ');
+}
+
+
+function formatSignalTime(signal){
+    const localTime = timestampToLocal24Hour(signal.time)
+    const formattedSignal = { ...signal, time: localTime }
+    return formattedSignal
+}
+    
+
+export async function getLatestSignals(limit=10, test_signals=SAMPLE_SIGNALS){
     const table = getTable()
     const response = await table.listRows({
         databaseId: DATABASE_ID,
@@ -47,7 +74,8 @@ export async function getLatestSignals(limit=10, test_signals=SAMPLE_SIGNALS){
         ]
     });
     if (response.total == 0) return test_signals
-    return getFlatRows(response.rows);
+        console.log(response.rows)
+    return (response.rows);
 };
 
 
@@ -72,11 +100,21 @@ function isActiveSignal(signal) {
 }
 
 
-export async function getActiveSignal(){
+export async function getPreviousSignals(){
     const signals = await getLatestSignals()
-    const activeSignals = flatSignals.filter(signal => isActiveSignal(signal))
+    return signals.map(signal => formatSignalTime(signal))
+}
+
+
+export async function getActiveSignals(){
+    const signals = await getLatestSignals()
+    const activeSignals = signals
+        .filter(signal => isActiveSignal(signal))
+        .map(signal => formatSignalTime(signal))
+
     return activeSignals
 
 }
+
 
 

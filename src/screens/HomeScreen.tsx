@@ -12,17 +12,13 @@ import { SignalTabs } from "../components/navigation/SignalTabs";
 import { TradeList } from "../components/trades/TradeList";
 import { AlertButton } from "../components/alerts/AlertButton";
 import { SVGHeader } from "../components/branding/SVGHeader.jsx";
+import { getActiveSignals, getPreviousSignals } from '../hooks/appwriteApi/fetchSignals.js'
+
 
 export default function HomeScreen() {
     const [tab, setTab] = useState<TradeTab>("active");
     const [alertsActive, setAlertsActive] = useState(false);
-
-    const trades = TRADES[tab];
-    const headerText =
-        tab === "active"
-            ? `${trades.length} Live`
-            : `${trades.length} Previous`;
-
+ 
     return (
         <View style={styles.root}>
             {/* Full-screen background */}
@@ -34,37 +30,16 @@ export default function HomeScreen() {
             {/* Content */}
             <View style={styles.safeArea}>
                 <SVGHeader />
-
-                <SignalTabs
-                    value={tab}
-                    onChange={setTab}
-                />
-
+                <SignalTabs value={tab} onChange={setTab} />
                 <View style={styles.listHeader}>
-                    <Text style={styles.listTitle}>
-                        {headerText}
-                    </Text>
-
-                    <Text style={styles.live}>
-                        ● Live
-                    </Text>
+                    <Text style={styles.live}>{tab === 'active'? '● Live': 'Previous'}</Text>
                 </View>
-
-                <TradeList trades={trades} />
+                <TradeList tabStatus={tab} />
             </View>
 
             {/* Bottom CTA */}
-            <LinearGradient
-                colors={["transparent", C.bg, C.bg]}
-                style={styles.footer}
-                pointerEvents="box-none"
-            >
-                <AlertButton
-                    active={alertsActive}
-                    onPress={() =>
-                        setAlertsActive((value) => !value)
-                    }
-                />
+            <LinearGradient colors={["transparent", C.bg, C.bg]} style={styles.footer} pointerEvents="box-none">
+                <AlertButton active={alertsActive} onPress={() => setAlertsActive((value) => !value)}/>
             </LinearGradient>
         </View>
     );
@@ -86,10 +61,11 @@ const styles = StyleSheet.create({
 
     listHeader: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 24,
         marginBottom: 10,
+        textAlign: 'center'
     },
 
     listTitle: {
@@ -102,10 +78,11 @@ const styles = StyleSheet.create({
     },
 
     live: {
-        fontSize: 11,
+        fontSize: 14,
         color: C.neon,
         opacity: 0.7,
         fontFamily: "Outfit-Regular",
+        textAlign: 'center'
     },
 
     footer: {

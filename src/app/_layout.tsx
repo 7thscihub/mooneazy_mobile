@@ -1,11 +1,16 @@
 import { Stack, useRouter } from "expo-router";
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
+import { Platform } from 'react-native'
+
 
 export default function RootLayout() {
     const router = useRouter();
 
     useEffect(() => {
+        if ( Platform.OS === 'web' ){
+            return
+        }
         // 1. Handle notification when the user clicks it (App in background)
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
             const appwritePath = response.notification.request.content.data?.path;

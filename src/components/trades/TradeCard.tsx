@@ -11,8 +11,8 @@ type Props = {
 };
 
 
-export function TradeCard({ signal }: Props) {
-
+export function TradeCard({ signal }: Props){
+ 
     const isBuy = signal.direction.toLowerCase() === "buy";
     return (
         <View style={styles.card} >

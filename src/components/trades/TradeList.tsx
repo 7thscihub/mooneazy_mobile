@@ -2,30 +2,40 @@ import React from "react";
 import { ScrollView, View, StyleSheet, ActivityIndicator } from "react-native";
 import { Trade } from "../../types/trade";
 import { TradeCard } from "./TradeCard";
-import { getLatestSignals } from '../../hooks/appwriteApi/fetchSignals.js'
+import { getPreviousSignals, getActiveSignals } from '../../hooks/appwriteApi/fetchSignals.js'
 
 type Props = {
-    trades: Trade[];
+    tabStatus: "active" | "previous";
 };
 
-export function TradeList(){
+
+export function TradeList({ tabStatus }){
     const [ signals, setSignals ] = React.useState(null)
     const [ loading, setLoading ] = React.useState(true)
+    const isActive = tabStatus.toLowerCase() === 'active'
+
     React.useEffect(() => {
         const getTradeSignals = async () => {
-            const latestSignals = await getLatestSignals()
-            setSignals(latestSignals)
+            let tradeSignals = null 
+            if (isActive) {
+                tradeSignals = await getActiveSignals()
+            }
+            else{
+                tradeSignals = await getPreviousSignals()
+            }
+            setSignals(tradeSignals)
             setLoading(false)
         }
         getTradeSignals()
-    }, [])
+    }, [isActive])
+ 
 
     function renderSignals(){
         if(loading){
             return <ActivityIndicator/>
         }
-        if(!signals){
-            return <Text>No Live Signals</Text>
+        if(!signals || signals.lenth === 0){
+            return <Text>No Signals</Text>
         }
         return signals.map((signal)=>(
             <TradeCard key={ signal.$id } signal={signal} /> 
@@ -34,11 +44,7 @@ export function TradeList(){
 
 
     return (
-        <ScrollView 
-            style={styles.list}
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
-        >
+        <ScrollView style={styles.list} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
             { renderSignals() }
             <View style={styles.bottomSpace} />
         </ScrollView>
