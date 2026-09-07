@@ -49,8 +49,12 @@ async function registerDeviceToAppwrite(deviceToken){
         });
         
     } catch (error) {
-        console.error('Appwrite Push Registration Failed:', error);
-        throw error; // Propagate up to show up in setupNotifications console
+        if (error.code === 409 || error.type === 'target_already_exists'){
+            console.info(error)
+        }
+        else{
+            console.error(error)
+        }
     }
 }
 
@@ -78,7 +82,7 @@ async function setFirstLaunch(value){
 async function isActive(){
     if (Platform.OS === 'web') return true
     const status = await AsyncStorage.getItem('IS_ACTIVE');
-    return status.toLowerCase() === 'true'
+    return status? status.toLowerCase() === 'true': false
 }
 
 
@@ -91,9 +95,10 @@ async function setActive(value){
 
 async function setupNotifications() {
     try {
+        if (Platform.OS === 'web') return
         const hasLaunched = await checkFirstLaunch();
-        const isActive = await isActive()
-        if (hasLaunched == true && isActive == false) return;
+        const active = await isActive()
+        if (hasLaunched == true && active == false) return;
 
         // A. Request system permissions
         const { status } = await Notifications.requestPermissionsAsync();
