@@ -111,7 +111,7 @@ export async function getActiveSignals(){
     const activeSignals = signals
         .filter(signal => isActiveSignal(signal))
         .map(signal => formatSignalTime(signal))
-
+    if (activeSignals.length == 0) return null
     return activeSignals
 
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, ActivityIndicator } from "react-native";
+import { ScrollView, View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { Trade } from "../../types/trade";
 import { TradeCard } from "./TradeCard";
 import { getPreviousSignals, getActiveSignals } from '../../hooks/appwriteApi/fetchSignals.js'
@@ -18,7 +18,8 @@ export function TradeList({ tabStatus }){
         const getTradeSignals = async () => {
             let tradeSignals = null 
             if (isActive) {
-                tradeSignals = await getActiveSignals()
+                const activeSignals = await getActiveSignals()
+                tradeSignals = activeSignals? activeSignals: null
             }
             else{
                 tradeSignals = await getPreviousSignals()
@@ -34,7 +35,7 @@ export function TradeList({ tabStatus }){
         if(loading){
             return <ActivityIndicator/>
         }
-        if(!signals || signals.lenth === 0){
+        if(!signals || signals.length === 0){
             return <Text>No Signals</Text>
         }
         return signals.map((signal)=>(
