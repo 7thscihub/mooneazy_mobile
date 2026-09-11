@@ -36,7 +36,12 @@ export function TradeList({ tabStatus }){
             return <ActivityIndicator/>
         }
         if(!signals || signals.length === 0){
-            return <Text>No Signals</Text>
+            return (
+                <View style={ styles.noSignals }>
+                    <Text style = { styles.noSignalsText }>No live signals</Text>
+                    <Text style = { styles.noSignalsText }>At the moment</Text>
+                </View>
+            )
         }
         return signals.map((signal)=>(
             <TradeCard key={ signal.$id } signal={signal} /> 
@@ -57,6 +62,22 @@ const styles = StyleSheet.create({
     list: { flex: 1, },
     content: { paddingHorizontal: 24, },
     bottomSpace: { height: 100, },
+    noSignals: {
+        width: '100%',
+        paddingTop: 50,
+        paddingBottom: 50,
+        // borderWidth: 1,
+        // borderColor: "red",
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        color: 'white',
+    },
+    noSignalsText: {
+        color: "white",
+        fontSize: 16,
+        
+    }
 });
 
 

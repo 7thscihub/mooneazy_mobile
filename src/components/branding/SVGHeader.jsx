@@ -65,7 +65,7 @@ export function SVGHeader() {
             </View>
 
             <Text style={styles.tagline}>
-                RIDE THE PUMP. EARLY.
+                Free Signals in Your Pocket.
             </Text>
         </View>
     );
