@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollView, View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { useLocalSearchParams } from 'expo-router'
 import { Trade } from "../../types/trade";
 import { TradeCard } from "./TradeCard";
 import { getPreviousSignals, getActiveSignals } from '../../hooks/appwriteApi/fetchSignals.js'
@@ -13,6 +14,9 @@ export function TradeList({ tabStatus }){
     const [ signals, setSignals ] = React.useState(null)
     const [ loading, setLoading ] = React.useState(true)
     const isActive = tabStatus.toLowerCase() === 'active'
+    const { reloadTrigger, notificationId } = useLocalSearchParams<{ 
+        reloadTrigger?: string; notificationId?: string; 
+    }>();
 
     React.useEffect(() => {
         const getTradeSignals = async () => {
@@ -28,7 +32,7 @@ export function TradeList({ tabStatus }){
             setLoading(false)
         }
         getTradeSignals()
-    }, [isActive])
+    }, [isActive, reloadTrigger, notificationId])
  
 
     function renderSignals(){
