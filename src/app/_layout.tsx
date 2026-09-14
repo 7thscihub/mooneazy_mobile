@@ -8,17 +8,20 @@ export default function RootLayout() {
     const router = useRouter();
 
     useEffect(() => {
-        if ( Platform.OS === 'web' ){
-            return
-        }
+        if ( Platform.OS === 'web' ){ return }
         // 1. Handle notification when the user clicks it (App in background)
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
             const appwritePath = response.notification.request.content.data?.path;
-            
             if (appwritePath) {
                 // Enforce fallback to root if Appwrite sends an empty or root value
                 const targetRoute = appwritePath === '' ? '/' : appwritePath;
-                router.navigate(targetRoute); 
+                router.navigate({
+                    pathname: targetRoute,
+                    params: { 
+                        reloadTrigger: Date.now().toString(),
+                        notificationId: data?.id || ''
+                    }
+                }); 
             }
         });
 
