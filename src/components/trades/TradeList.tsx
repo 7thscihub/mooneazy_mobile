@@ -14,13 +14,13 @@ export function TradeList({ tabStatus }){
     const [ signals, setSignals ] = React.useState(null)
     const [ loading, setLoading ] = React.useState(true)
     const isActive = tabStatus.toLowerCase() === 'active'
-    const { reloadTrigger, notificationId } = useLocalSearchParams<{ 
-        reloadTrigger?: string; notificationId?: string; 
-    }>();
+    
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
     React.useEffect(() => {
         const getTradeSignals = async () => {
-            let tradeSignals = null 
+            let tradeSignals = null
+            await sleep(2000)
             if (isActive) {
                 const activeSignals = await getActiveSignals()
                 tradeSignals = activeSignals? activeSignals: null
@@ -29,10 +29,11 @@ export function TradeList({ tabStatus }){
                 tradeSignals = await getPreviousSignals()
             }
             setSignals(tradeSignals)
+            
             setLoading(false)
         }
         getTradeSignals()
-    }, [isActive, reloadTrigger, notificationId])
+    }, [isActive])
  
 
     function renderSignals(){

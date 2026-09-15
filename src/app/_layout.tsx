@@ -15,15 +15,12 @@ export default function RootLayout() {
             if (appwritePath) {
                 // Enforce fallback to root if Appwrite sends an empty or root value
                 const targetRoute = appwritePath === '' ? '/' : appwritePath;
-                router.navigate({
+                router.push({
                     pathname: targetRoute,
-                    params: { 
-                        reloadTrigger: Date.now().toString(),
-                        notificationId: data?.id || ''
-                    }
+                    params: { newAlertTime: Date.now().toString() }
                 }); 
             }
-        });
+        })
 
         // 2. Handle notification if the app was completely closed/killed
         Notifications.getLastNotificationResponseAsync()

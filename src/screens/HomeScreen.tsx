@@ -13,12 +13,27 @@ import { TradeList } from "../components/trades/TradeList";
 import { AlertButton } from "../components/alerts/AlertButton";
 import { SVGHeader } from "../components/branding/SVGHeader.jsx";
 import { getActiveSignals, getPreviousSignals } from '../hooks/appwriteApi/fetchSignals.js'
-
+import { useLocalSearchParams } from 'expo-router'
 
 export default function HomeScreen() {
     const [tab, setTab] = useState<TradeTab>("active");
     const [alertsActive, setAlertsActive] = useState(false);
- 
+    const [ alertTime, setAlertTime ] = useState(null)
+    
+    const newAlertTime = useLocalSearchParams().newAlertTime || null;
+
+    function resetActiveTab(){
+        if (newAlertTime != alertTime){
+            console.log(newAlertTime)
+            setAlertTime(newAlertTime)
+            setTab('active')
+        }
+    }
+
+    React.useEffect(()=> {
+        resetActiveTab()
+    }, [newAlertTime])
+
     return (
         <View style={styles.root}>
             {/* Full-screen background */}
