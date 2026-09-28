@@ -17,6 +17,9 @@ const SAMPLE_SIGNALS = [
         signal_type: 'SFP_BUY',
         direction: 'BUY',
         time: '2026-09-20: 11:09:23',
+        status: 'partial',
+        tp1_status: 'success',
+        tp2_status: 'failed'
     }
 ]
 
