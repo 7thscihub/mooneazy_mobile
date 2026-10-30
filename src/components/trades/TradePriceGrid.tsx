@@ -1,9 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-
 import { C } from "../../theme/colors";
 import { Trade } from "../../types/trade";
-
 type Props = Pick< Trade, "entry" | "sl" | "tp1" | "tp2" >;
 
 export default function TradePriceGrid({ entry_price, sl, tp1, tp2, }: Props){

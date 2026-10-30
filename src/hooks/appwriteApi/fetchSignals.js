@@ -66,7 +66,7 @@ function formatSignalTime(signal){
 }
     
 
-export async function getLatestSignals(limit=10, test_signals=SAMPLE_SIGNALS){
+export async function getLatestSignals(limit=20, test_signals=SAMPLE_SIGNAL
     const table = getTable()
     const response = await table.listRows({
         databaseId: DATABASE_ID,

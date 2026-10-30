@@ -17,8 +17,7 @@ import { C } from "../../theme/colors";
 export function SVGHeader() {
     return (
         <View style={styles.container}>
-            <RocketLogo />
-
+            {/* <RocketLogo /> */}
             <View style={styles.titleContainer}>
                 <Svg width={280} height={40}>
                     <Defs>

@@ -39,7 +39,7 @@ export default function HomeScreen() {
             {/* Full-screen background */}
             <View style={styles.background} pointerEvents="none">
                 <StarField />
-                <BackgroundEffects />
+                {/* <BackgroundEffects /> */}
             </View>
 
             {/* Content */}

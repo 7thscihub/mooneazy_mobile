@@ -4,7 +4,7 @@
     "slug": "mooneazy",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icons/rocket.png",
     "scheme": "mooneazy",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -19,8 +19,8 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
+          "backgroundColor": "#060612",
+          "image": "./assets/icons/rocket.png",
           "imageWidth": 76
         }
       ],
@@ -37,10 +37,8 @@
     ],
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icons/rocket.png",
+        "backgroundColor": "#060612"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.scihub.mooneazy",
@@ -48,7 +46,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/rocket.png"
     },
     "experiments": {
       "typedRoutes": true,
@@ -59,6 +57,12 @@
       "eas": {
         "projectId": "d4b21385-b2ab-4597-8b3c-13ab494be778"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d4b21385-b2ab-4597-8b3c-13ab494be778"
     }
   }
 }
