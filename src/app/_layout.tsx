@@ -1,43 +1,44 @@
-import { Stack, useRouter } from "expo-router";
-import * as Notifications from 'expo-notifications';
-import { useEffect } from 'react';
-import { Platform } from 'react-native'
+import { Stack, useRouter } from "expo-router"; 
+import * as Notifications from 'expo-notifications'; 
+import { useEffect } from 'react'; 
+import { Platform } from 'react-native'; 
+import { registerBackgroundFetch } from '../hooks/background/signals.js'; 
+
+
+function handleNotificationRoute(response, router) {
+    const appwritePath = response?.notification.request.content.data?.path; 
+    if (!appwritePath) return;
+    const targetRoute = appwritePath === '' ? '/' : appwritePath; 
+    router.navigate(targetRoute);
+}
 
 
 export default function RootLayout() {
     const router = useRouter();
 
-    useEffect(() => {
-        if ( Platform.OS === 'web' ){ return }
-        // 1. Handle notification when the user clicks it (App in background)
-        const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-            const appwritePath = response.notification.request.content.data?.path;
-            if (appwritePath) {
-                // Enforce fallback to root if Appwrite sends an empty or root value
-                const targetRoute = appwritePath === '' ? '/' : appwritePath;
-                router.push({
-                    pathname: targetRoute,
-                    params: { newAlertTime: Date.now().toString() }
-                }); 
-            }
-        })
+    useEffect(() => { 
+        if (Platform.OS === 'web') return;
 
-        // 2. Handle notification if the app was completely closed/killed
-        Notifications.getLastNotificationResponseAsync()
-            .then(response => {
-                const appwritePath = response?.notification.request.content.data?.path;
-                if (appwritePath) {
-                    const targetRoute = appwritePath === '' ? '/' : appwritePath;
-                    router.navigate(targetRoute);
-                }
-            });
+        const subscription = Notifications.addNotificationResponseReceivedListener(
+            response => { handleNotificationRoute(response, router)}
+        );
+
+        Notifications.getLastNotificationResponseAsync().then(
+            response => { handleNotificationRoute(response, router)}
+        );
 
         return () => subscription.remove();
-    }, []);
+    },  [router]);
 
+    useEffect(() => { 
+        if (Platform.OS === 'web') return;
+            registerBackgroundFetch();
+    },  []);
 
-    return <Stack screenOptions={{ headerShown: false}} />;
+    return <Stack screenOptions={{ headerShown: false }} />;
 }
+
+
 
 
 

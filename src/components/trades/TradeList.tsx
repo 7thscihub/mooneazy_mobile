@@ -3,7 +3,8 @@ import { ScrollView, View, StyleSheet, Text, ActivityIndicator } from "react-nat
 import { useLocalSearchParams } from 'expo-router'
 import { Trade } from "../../types/trade";
 import { TradeCard } from "./TradeCard";
-import { getPreviousSignals, getActiveSignals } from '../../hooks/appwriteApi/fetchSignals.js'
+import { getPreviousSignals, getActiveSignals } from '../../hooks/background/signals.js'
+
 
 type Props = {
     tabStatus: "active" | "previous";
@@ -14,13 +15,11 @@ export function TradeList({ tabStatus }){
     const [ signals, setSignals ] = React.useState(null)
     const [ loading, setLoading ] = React.useState(true)
     const isActive = tabStatus.toLowerCase() === 'active'
-    
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
     React.useEffect(() => {
         const getTradeSignals = async () => {
+            setLoading(true)
             let tradeSignals = null
-            await sleep(2000)
             if (isActive) {
                 const activeSignals = await getActiveSignals()
                 tradeSignals = activeSignals? activeSignals: null
@@ -29,7 +28,6 @@ export function TradeList({ tabStatus }){
                 tradeSignals = await getPreviousSignals()
             }
             setSignals(tradeSignals)
-            
             setLoading(false)
         }
         getTradeSignals()
@@ -43,11 +41,12 @@ export function TradeList({ tabStatus }){
         if(!signals || signals.length === 0){
             return (
                 <View style={ styles.noSignals }>
-                    <Text style = { styles.noSignalsText }>No live signals</Text>
+                    <Text style = { styles.noSignalsText }>No signals</Text>
                     <Text style = { styles.noSignalsText }>At the moment</Text>
                 </View>
             )
         }
+        
         return signals.map((signal)=>(
             <TradeCard key={ signal.$id } signal={signal} /> 
         ))

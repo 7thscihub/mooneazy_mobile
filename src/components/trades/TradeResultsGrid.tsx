@@ -5,13 +5,22 @@ import { Trade } from "../../types/trade";
 type Props = Pick< Trade, "entry" | "sl" | "tp1" | "tp2" >;
 
 
-export default function TradeResultsGrid({ status, sl, tp1_status, tp2_status, }: Props){
+
+export default function TradeResultsGrid({ status, sl, tp1_status, tp2_status }: Props){
     return (
         <View style={styles.grid}> 
-            <View style={styles.item}><Text style={[ styles.label ]} >Status</Text></View>
-            <View style={styles.item}><Text style={[ styles.value ]} ></Text></View>
-            <View style={styles.item}><Text style={[ styles.value ]} >{tp1_status}</Text></View>
-            <View style={styles.item}><Text style={[ styles.value]} >{tp2_status}</Text></View>
+            <View key="status_label" style={styles.item}>
+                <Text style={styles.label}>Status</Text>
+            </View>
+            <View key="status_val" style={styles.item}>
+                <Text style={styles.value}>{status}</Text>
+            </View>
+            <View key="tp1_val" style={styles.item}>
+                <Text style={styles.value}>{tp1_status}</Text>
+            </View>
+            <View key="tp2_val" style={styles.item}>
+                <Text style={styles.value}>{tp2_status}</Text>
+            </View>
         </View>
     );
 }
@@ -48,3 +57,4 @@ const styles = StyleSheet.create({
         fontFamily: "Outfit-SemiBold",
     },
 });
+

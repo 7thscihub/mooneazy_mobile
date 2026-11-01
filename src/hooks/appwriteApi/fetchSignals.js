@@ -1,34 +1,7 @@
-import { TablesDB, Query } from 'react-native-appwrite';
-import getClient from './appwriteClient.js'
+import axios from "axios";
 
-const DATABASE_ID = '6a43976e003cf8a01028';
-const TABLE_ID = 'signals';
-
-
-const SAMPLE_SIGNALS = [
-    {
-        $id: "btcusdtsfpbuy2pm",
-        symbol: 'btcusdt',
-        interval: '15m',
-        entry_price: 68000.00,
-        sl: 67000.87,
-        tp1: 68898.99,
-        tp2: 74098.20,
-        signal_type: 'SFP_BUY',
-        direction: 'BUY',
-        time: '2026-09-20: 11:09:23',
-        status: 'partial',
-        tp1_status: 'success',
-        tp2_status: 'failed'
-    }
-]
-
-
-function getTable(){
-    const client = getClient()
-    const tablesDB = new TablesDB(client);
-    return tablesDB
-}
+const signalsUrl = 'https://results.fra.appwrite.run/';
+const latestSignalsParams = { 'latest': 20 }
 
 
 function getFlatRows(rows){
@@ -64,25 +37,22 @@ function formatSignalTime(signal){
     const formattedSignal = { ...signal, time: localTime }
     return formattedSignal
 }
-    
 
-export async function getLatestSignals(limit=20, test_signals=SAMPLE_SIGNAL
-    const table = getTable()
-    const response = await table.listRows({
-        databaseId: DATABASE_ID,
-        tableId: TABLE_ID,
-        queries: [
-            Query.orderDesc('$createdAt'), 
-            Query.limit(limit)
-        ]
-    });
-    if (response.total == 0) return test_signals
-        console.log(response.rows)
-    return (response.rows);
-};
+
+export async function getLatestSignals(url=signalsUrl, params=latestSignalsParams) {
+    try {
+        const response = await axios.get(url, { params: params, timeout: 30000 });
+        const signals = response.data;
+        return getFlatRows(signals);
+    } catch (error) {
+        console.error("Failed to fetch latest signals:", error.message);
+        return null;
+    }
+}
 
 
 function isActiveSignal(signal) {
+    // console.log("Checking signal:", signal);
     const { interval, time } = signal;
     const value = parseInt(interval, 10);
     const unit = interval.slice(-1);
@@ -109,11 +79,16 @@ export async function getPreviousSignals(){
 }
 
 
-export async function getActiveSignals(){
-    const signals = await getLatestSignals()
-    const activeSignals = signals
+export async function getActiveSignals(signals=null){
+    let latestSignals = signals 
+    if (!latestSignals || latestSignals.length === 0) {
+        latestSignals = await getLatestSignals()
+        console.log(latestSignals)
+    }
+    const activeSignals = latestSignals
         .filter(signal => isActiveSignal(signal))
         .map(signal => formatSignalTime(signal))
+    console.log("Active signals:", activeSignals)
     if (activeSignals.length == 0) return null
     return activeSignals
 

@@ -33,7 +33,8 @@
           ]
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-background-task"
     ],
     "android": {
       "adaptiveIcon": {
