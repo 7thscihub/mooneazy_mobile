@@ -2,7 +2,7 @@ import { Stack, useRouter } from "expo-router";
 import * as Notifications from 'expo-notifications'; 
 import { useEffect } from 'react'; 
 import { Platform } from 'react-native'; 
-import { registerBackgroundFetch } from '../hooks/background/signals.js'; 
+import { registerBackgroundFetch } from '../hooks/background/signals'; 
 
 
 function handleNotificationRoute(response, router) {

@@ -53,29 +53,28 @@ export async function unregisterBackgroundFetch() {
 
 export async function getPreviousSignals() {
     let data = await AsyncStorage.getItem(PREVIOUS_SIGNALS_KEY);
-    console.log("Previous signals from storage:", data);
+    // console.log("Previous signals from storage:", data);
     if (!data) {
         const response = await fetchPreviousSignalsApi();
-        console.log("Fetched previous signals from API:", response);
+        // console.log("Fetched previous signals from API:", response);
         if (response) {
             data = JSON.stringify(response);
             await AsyncStorage.setItem(PREVIOUS_SIGNALS_KEY, data);
         }
     }
-    console.log("Returning previous signals:", data);
-    return data ? JSON.parse(data) : null;
+    // console.log("Returning previous signals:", data);
+    
+    const dataObject =  data ? JSON.parse(data) : null;
+    dataObject?.sort((a, b) => b.time - a.time); // Sort by time in descending order
+    console.log("Returning dataObject:", dataObject);
+    return dataObject;
 }
 
 export async function getActiveSignals() {
-    let data = await AsyncStorage.getItem(ACTIVE_SIGNALS_KEY);
-    // console.log("Active signals from storage:", data);
-    if (!data) {
-        const response = await fetchActiveSignalsApi(); 
-        if (response && response.data) {
-            data = JSON.stringify(response.data);
-            await AsyncStorage.setItem(ACTIVE_SIGNALS_KEY, data);
-        }
+    const response = await fetchActiveSignalsApi(); 
+    if (response && response.data) {
+        return rresponse.data;
     }
-    return data ? JSON.parse(data) : null;
+    return null;
 }
 

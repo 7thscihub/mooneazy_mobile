@@ -34,7 +34,7 @@ function timestampToLocal24Hour(binanceTimestamp){
 
 function formatSignalTime(signal){
     const localTime = timestampToLocal24Hour(signal.time)
-    const formattedSignal = { ...signal, time: localTime }
+    const formattedSignal = { ...signal, localTime: localTime }
     return formattedSignal
 }
 
@@ -42,7 +42,7 @@ function formatSignalTime(signal){
 export async function getLatestSignals(url=signalsUrl, params=latestSignalsParams) {
     try {
         const response = await axios.get(url, { params: params, timeout: 30000 });
-        const signals = response.data;
+        const signals = response.data.sort((a, b) => b.time - a.time); // Sort by time in descending order
         return getFlatRows(signals);
     } catch (error) {
         console.error("Failed to fetch latest signals:", error.message);
@@ -85,6 +85,7 @@ export async function getActiveSignals(signals=null){
         latestSignals = await getLatestSignals()
         console.log(latestSignals)
     }
+    if (!latestSignals || latestSignals.length === 0) return
     const activeSignals = latestSignals
         .filter(signal => isActiveSignal(signal))
         .map(signal => formatSignalTime(signal))

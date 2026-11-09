@@ -12,7 +12,7 @@ type Props = {
 
 
 export function TradeCard({ signal }: Props){
- 
+    // console.log("TradeCard signal:", signal);
     const isBuy = signal.direction.toLowerCase() === "buy";
     return (
         <View style={styles.card} >
@@ -32,7 +32,7 @@ export function TradeCard({ signal }: Props){
                     </View>
                 </View>
 
-                <Text style={styles.time}>{signal.time}</Text>
+                <Text style={styles.time}>{signal.localTime}</Text>
             </View>
 
             {/* Direction */}
@@ -48,7 +48,7 @@ export function TradeCard({ signal }: Props){
             </LinearGradient>
         </View>
         <TradePriceGrid entry_price={signal.entry_price} sl={signal.sl} tp1={signal.tp1} tp2={signal.tp2}/>
-        <TradeResultsGrid status={signal.status} sl={''} tp1_status={signal.tp1_status} tp2_status={signal.tp2_status} />
+        <TradeResultsGrid status={''} sl={''} tp1_status={signal.tp1_status} tp2_status={signal.tp2_status} />
     </View>
   );
 }
